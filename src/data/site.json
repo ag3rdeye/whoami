@@ -1,22 +1,39 @@
 {
   "title": "Arjun Giri",
   "domain": "arjun-giri.com.np",
-  "tagline": "Security Researcher, Security Engineer, Technologist",
+  "tagline": "Security Researcher",
   "description": "Arjun Giri is a security professional and researcher focused on understanding how technology works, how it breaks, and how to make it more secure.",
   "author": "Arjun Giri",
   "email": "info@arjun-giri.com.np",
   "nav": [
-    { "label": "About", "href": "/about" },
-    { "label": "Experience", "href": "/experience" },
-    { "label": "Research", "href": "/research" },
-    { "label": "Projects", "href": "/projects" },
-    { "label": "Writeup", "href": "/writeup" },
-    { "label": "Contact", "href": "/contact" }
+    {
+      "label": "About",
+      "href": "/about"
+    },
+    {
+      "label": "Experience",
+      "href": "/experience"
+    },
+    {
+      "label": "Research",
+      "href": "/research"
+    },
+    {
+      "label": "Projects",
+      "href": "/projects"
+    },
+    {
+      "label": "Writeup",
+      "href": "/writeup"
+    },
+    {
+      "label": "Contact",
+      "href": "/contact"
+    }
   ],
   "socials": {
     "github": "https://github.com/ag3rdeye",
-    "linkedin": "https://www.linkedin.com/in/arjungiri",
-    "twitter": ""
+    "linkedin": "https://www.linkedin.com/in/arjungiri"
   },
   "copyright": "Arjun Giri"
 }
