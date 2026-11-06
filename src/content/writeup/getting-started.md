@@ -1,17 +1,19 @@
 ---
-title: 'Welcome to the Writeup Section'
-description: 'A sample article showing how writeups render, including code blocks, tables, and a table of contents.'
+title: Welcome to the Writeup Section
+description: Writeup tests
 publishDate: 2025-01-15
-category: 'Learning Notes'
-tags: ['meta', 'astro']
-author: 'Arjun Giri'
+updated: 2026-11-06
+category: Learning Notes
+tags:
+  - meta
+  - astro
+author: Arjun Giri
 draft: false
 featured: true
 references:
-  - label: 'Astro documentation'
-    url: 'https://docs.astro.build/'
+  - label: Astro documentation
+    url: https://docs.astro.build/
 ---
-
 This is a sample writeup. It demonstrates the reading experience: typography, code
 highlighting, copy buttons, tables, and an automatic table of contents. Replace or delete
 this file once you publish real content.
@@ -35,11 +37,13 @@ export function greet(name: string): string {
 
 Tables render responsively and scroll on small screens.
 
-| Field     | Type    | Required |
-| --------- | ------- | -------- |
-| title     | string  | yes      |
-| draft     | boolean | no       |
-| featured  | boolean | no       |
+
+| Field | Type | Required |
+| -------- | ------- | -------- |
+| title | string | yes |
+| draft | boolean | no |
+| featured | boolean | no |
+
 
 ## Next steps
 
