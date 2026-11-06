@@ -1,0 +1,74 @@
+---
+import '@/styles/global.css';
+import SEO from '@/components/SEO.astro';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import Shell from '@/components/Shell.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishDate?: Date;
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
+}
+
+const props = Astro.props;
+
+// GitHub Pages cannot set headers, so the policy ships as a meta tag. Dev needs inline scripts.
+const csp = [
+  "default-src 'none'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "connect-src 'self'",
+  "base-uri 'self'",
+  "form-action 'none'",
+].join('; ');
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Arjun Giri | Writeups"
+      href="/rss.xml"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <SEO {...props} />
+    <script is:inline src="/theme.js"></script>
+    <ClientRouter />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <canvas id="field" aria-hidden="true" transition:persist></canvas>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
+      >Skip to content</a
+    >
+    <Header />
+    <main id="main" class="relative z-10 mx-auto w-full max-w-[1500px] flex-1 px-5 sm:px-10">
+      <slot />
+    </main>
+    <Footer />
+    <Shell />
+    <button id="motion-offer" type="button" hidden transition:persist>
+      Animation is reduced on this device. Turn it on
+    </button>
+    <script>
+      import '@/scripts/site';
+      import '@/scripts/field';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
+import { Icon } from 'astro-icon/components';
+import site from '@/data/site.json';
+
+const channels = [
+  site.email && {
+    icon: 'lucide:mail',
+    label: 'Email',
+    value: site.email,
+    href: `mailto:${site.email}`,
+  },
+  site.socials.linkedin && {
+    icon: 'lucide:linkedin',
+    label: 'LinkedIn',
+    value: site.socials.linkedin.replace('https://', ''),
+    href: site.socials.linkedin,
+  },
+  site.socials.github && {
+    icon: 'lucide:github',
+    label: 'GitHub',
+    value: site.socials.github.replace('https://', ''),
+    href: site.socials.github,
+  },
+].filter(Boolean) as { icon: string; label: string; value: string; href: string }[];
+---
+
+<BaseLayout title="Contact" description="Get in touch with Arjun Giri.">
+  <PageHead title="Contact" lede="Security research, collaboration, or responsible disclosure." />
+
+  <a
+    href={`mailto:${site.email}`}
+    class="mt-20 block break-all font-heading text-[clamp(2.25rem,7.4vw,7rem)] uppercase leading-none transition-colors hover:text-accent"
+    >{site.email}</a
+  >
+
+  <ul class="mt-16 grid border-t border-l border-border md:grid-cols-2">
+    {
+      channels
+        .filter((c) => !c.href.startsWith('mailto:'))
+        .map((c) => (
+          <li class="border-r border-b border-border">
+            <a
+              href={c.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-center gap-4 p-5 transition-colors hover:bg-surface"
+            >
+              <Icon name={c.icon} class="size-5 text-accent" />
+              <span class="text-xl">{c.label}</span>
+              <span class="label ml-auto break-all text-muted">{c.value}</span>
+            </a>
+          </li>
+        ))
+    }
+  </ul>
+
+  <p class="label mt-10 text-muted">
+    Found an issue on this site? See
+    <a href="/.well-known/security.txt" class="text-accent underline underline-offset-4">security.txt</a>.
+  </p>
+</BaseLayout>

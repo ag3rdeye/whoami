@@ -1,0 +1,29 @@
+# build output
+dist/
+.output/
+
+# dependencies
+node_modules/
+
+# astro
+.astro/
+
+# env
+.env
+.env.production
+.env.*.local
+
+# raw camera source (large; converted copy lives in src/assets)
+*.ARW
+*.arw
+
+# personal documents, never published
+*[Rr]esume*.pdf
+SETUP-GUIDE.md
+DEV-NOTES.md
+
+# os / editor
+.DS_Store
+*.log
+.vscode/
+.idea/

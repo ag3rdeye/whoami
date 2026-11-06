@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
+import ResearchCard from '@/components/ResearchCard.astro';
+import { getResearch } from '@/lib/content';
+
+const items = await getResearch();
+---
+
+<BaseLayout
+  title="Research"
+  description="Vulnerability research, security analysis, and responsible disclosure by Arjun Giri."
+>
+  <div>
+    <PageHead title="Research" lede="Vulnerability discoveries and responsible disclosure." />
+
+    <div class="mt-20 grid gap-x-16 md:grid-cols-2">
+      {
+        items.length > 0 ? (
+          items.map((entry) => <ResearchCard entry={entry} />)
+        ) : (
+          <p class="text-muted">Research entries will appear here.</p>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

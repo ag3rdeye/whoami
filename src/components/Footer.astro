@@ -1,0 +1,21 @@
+---
+import site from '@/data/site.json';
+import { Icon } from 'astro-icon/components';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative z-10 mt-32">
+  <div class="mx-auto flex max-w-[1500px] items-center justify-between px-5 py-8 sm:px-10">
+    <p class="label text-muted">&copy; {year} {site.copyright}. All rights reserved.</p>
+
+    <a
+      href="#top"
+      class="label inline-flex items-center gap-1.5 text-muted transition-colors hover:text-accent"
+      aria-label="Back to top"
+    >
+      Back to top
+      <Icon name="lucide:arrow-up" class="size-3.5" />
+    </a>
+  </div>
+</footer>

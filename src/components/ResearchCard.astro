@@ -1,0 +1,30 @@
+---
+import type { Research } from '@/lib/content';
+import Redacted from './Redacted.astro';
+
+interface Props {
+  entry: Research;
+}
+const { entry } = Astro.props;
+const { data } = entry;
+const withheld = data.disclosureStatus === 'reserved' || data.disclosureStatus === 'embargoed';
+const [, year, number] = data.cve?.match(/^CVE-(\d+)-(\d+)$/) ?? [];
+const heading = data.title === data.cve ? data.product : data.title;
+const date = data.publishDate?.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+---
+
+<a href={`/research/${entry.id}`} class="group rise block border-t border-fg/25 py-6">
+  <div class="label flex justify-between uppercase">
+    <span class="text-muted">CVE {year}</span>
+    <span class={data.severity ? `sev-${data.severity}` : 'text-muted'}>
+      {data.severity ?? data.disclosureStatus}{data.cvss != null && ` ${data.cvss}`}
+    </span>
+  </div>
+  <p class="mt-1 font-heading text-[clamp(4rem,9vw,8.5rem)] leading-none transition-colors group-hover:text-accent">
+    {number ?? data.title}
+  </p>
+  <h3 class="mt-3 font-sans text-xl normal-case leading-snug">{heading}</h3>
+  <p class="mt-2 leading-snug text-muted">{data.summary}</p>
+  {withheld && <div class="mt-4 max-w-md"><Redacted lines={2} /></div>}
+  {date && <p class="label mt-4 text-muted">{date}</p>}
+</a>

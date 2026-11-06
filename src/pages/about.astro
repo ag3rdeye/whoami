@@ -1,0 +1,84 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
+import Skills from '@/components/Skills.astro';
+import CertificationCard from '@/components/CertificationCard.astro';
+import { getCredentials, getResearch } from '@/lib/content';
+import about from '@/data/about.json';
+
+const paragraphs = about.bio.split('\n\n');
+const { certifications, recognition } = await getCredentials();
+const cves = (await getResearch()).filter((e) => e.data.cve).length;
+const stats = [
+  { value: String(cves), label: 'CVE identifiers' },
+  { value: String(certifications.length), label: 'certifications' },
+  ...about.stats,
+];
+const heading = 'section-title';
+---
+
+<BaseLayout title={about.title} description={paragraphs[0]}>
+  <PageHead title={about.title} />
+  <div class="mt-12 max-w-5xl space-y-6 text-2xl leading-snug text-fg/90 sm:text-[2rem] sm:leading-[1.25]">
+    {paragraphs.map((p) => <p>{p}</p>)}
+  </div>
+
+  <dl class="rise mt-20 grid grid-cols-2 gap-y-10 lg:grid-cols-4">
+    {
+      stats.map((s) => (
+        <div>
+          <dd class="font-heading text-[clamp(4rem,10vw,9rem)] leading-none text-accent">{s.value}</dd>
+          <dt class="label mt-2 text-muted">{s.label}</dt>
+        </div>
+      ))
+    }
+  </dl>
+
+  {
+    about.focusAreas.length > 0 && (
+      <section class="rise mt-32">
+        <h2 class={heading}>Areas of focus</h2>
+        <div class="mt-8 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {about.focusAreas.map((area) => (
+            <div>
+              <h3 class="text-2xl text-accent">{area.title}</h3>
+              <p class="mt-2 leading-snug text-fg/80">{area.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    recognition.length > 0 && (
+      <section class="rise mt-32">
+        <h2 class={heading}>Recognition</h2>
+        <ul class="mt-10 grid border-t border-l border-border sm:grid-cols-2">
+          {recognition.map((entry) => (
+            <CertificationCard entry={entry} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="rise mt-32">
+    <h2 class={heading}>Skills</h2>
+    <Skills />
+  </section>
+
+  {
+    certifications.length > 0 && (
+      <section class="rise mt-32">
+        <h2 class={heading}>Certifications</h2>
+        <ul class="mt-10 grid border-t border-l border-border sm:grid-cols-2 lg:grid-cols-3">
+          {certifications.map((entry) => (
+            <CertificationCard entry={entry} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+</BaseLayout>

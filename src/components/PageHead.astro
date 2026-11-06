@@ -1,0 +1,12 @@
+---
+interface Props {
+  title: string;
+  lede?: string;
+}
+const { title, lede } = Astro.props;
+---
+
+<header class="pt-[9vh]">
+  <h1 data-glyph class="poster" style={`--len:${title.length}`}>{title}</h1>
+  {lede && <p class="mt-6 max-w-3xl text-2xl italic leading-snug text-muted sm:text-3xl">{lede}</p>}
+</header>

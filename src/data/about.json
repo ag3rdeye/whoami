@@ -1,0 +1,32 @@
+{
+  "title": "About",
+  "bio": "I am a security professional working across offensive and defensive security. I have done penetration testing, vulnerability assessment, and SOC work for organizations in finance, telecommunications, aviation, and cloud infrastructure.\n\nMost days move between breaking things and making them hold: testing web, mobile, API, and desktop applications, writing detection rules, and building small tools that make assessments faster. I care about the fix as much as the finding, so I stay with teams until an issue is actually closed.\n\nMy vulnerability research has led to a CVE in Oracle Analytics Desktop and to acknowledgements from the U.S. Department of Education, Yamaha Motor, and Norton VPN.",
+  "stats": [
+    {
+      "value": "100+",
+      "label": "custom detection rules written"
+    },
+    {
+      "value": "4",
+      "label": "industry sectors served"
+    }
+  ],
+  "focusAreas": [
+    {
+      "title": "Offensive Security",
+      "body": "Penetration testing across web, mobile, API, thick client, and network targets, including bypassing controls such as WAFs, AMSI, and XDR."
+    },
+    {
+      "title": "Defensive Security",
+      "body": "SOC operations and threat detection, with custom Sigma and ElastAlert rules mapped to MITRE ATT&CK."
+    },
+    {
+      "title": "Research",
+      "body": "Vulnerability discovery and responsible disclosure, along with tracking emerging threats and attack techniques."
+    },
+    {
+      "title": "Engineering",
+      "body": "Internal tools and automation for assessment workflows, plus security work supporting PCI DSS and ISO 27001."
+    }
+  ]
+}

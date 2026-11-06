@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="The page you are looking for does not exist." noindex>
+  <div class="pt-[9vh]">
+    <p data-glyph class="poster" style="--len:3">404</p>
+    <pre
+      class="label mt-8 overflow-x-auto leading-relaxed text-muted"><span class="text-accent">HTTP/2 404 Not Found</span>
+server: github-pages
+content-type: text/html
+x-requested-path: <span id="path" class="text-fg">unknown</span></pre>
+
+    <h1 class="mt-8 text-4xl sm:text-6xl">Nothing at this address</h1>
+    <p id="verdict" class="mt-4 text-2xl italic text-muted">
+      The link may be broken, or the page may have moved.
+    </p>
+    <a href="/" class="label mt-8 inline-block text-accent underline underline-offset-4"
+      >cd ~</a
+    >
+  </div>
+</BaseLayout>
+
+<script>
+  function decodeSafe(value: string) {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  }
+
+  const probes: [RegExp, string][] = [
+    [/<\s*\/?\s*(script|img|svg)|onerror|javascript:/i, 'That looks like XSS. It was written with textContent, so it stayed text.'],
+    [/\.\.[\\/]|etc\/passwd|win\.ini/i, 'Path traversal? There is no filesystem behind this, only static files.'],
+    [/('|%27)\s*(or|and|union)\b|union\s+select|sleep\(/i, 'Injection attempt noted. There is no database to answer it.'],
+    [/\.env|\.git|wp-admin|wp-login|phpmyadmin/i, 'Standard wordlist entry. Nothing behind it, this site is static.'],
+  ];
+
+  const show = () => {
+    const out = document.getElementById('path');
+    const verdict = document.getElementById('verdict');
+    if (!out || !verdict) return;
+    const path = decodeSafe(location.pathname + location.search);
+    out.textContent = path.slice(0, 120);
+    const hit = probes.find(([pattern]) => pattern.test(path));
+    if (hit) verdict.textContent = hit[1];
+  };
+  document.addEventListener('astro:page-load', show);
+</script>

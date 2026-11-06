@@ -1,0 +1,51 @@
+---
+interface Props {
+  vector: string;
+}
+
+// CVSS v3.1 metric names, in vector order. Rank drives the bar: higher means worse.
+const metrics: Record<string, { name: string; values: Record<string, [string, number]> }> = {
+  AV: { name: 'Attack vector', values: { N: ['Network', 4], A: ['Adjacent', 3], L: ['Local', 2], P: ['Physical', 1] } },
+  AC: { name: 'Attack complexity', values: { L: ['Low', 4], H: ['High', 1] } },
+  PR: { name: 'Privileges required', values: { N: ['None', 4], L: ['Low', 3], H: ['High', 1] } },
+  UI: { name: 'User interaction', values: { N: ['None', 4], R: ['Required', 1] } },
+  S: { name: 'Scope', values: { C: ['Changed', 4], U: ['Unchanged', 1] } },
+  C: { name: 'Confidentiality', values: { H: ['High', 4], L: ['Low', 2], N: ['None', 0] } },
+  I: { name: 'Integrity', values: { H: ['High', 4], L: ['Low', 2], N: ['None', 0] } },
+  A: { name: 'Availability', values: { H: ['High', 4], L: ['Low', 2], N: ['None', 0] } },
+};
+
+const { vector } = Astro.props;
+const rows = vector
+  .split('/')
+  .slice(1)
+  .flatMap((part) => {
+    const [key, value] = part.split(':');
+    const metric = metrics[key];
+    const entry = metric?.values[value];
+    return entry ? [{ key, name: metric.name, label: entry[0], rank: entry[1] }] : [];
+  });
+---
+
+{
+  rows.length > 0 && (
+    <section class="not-prose mb-10 border border-border/60 bg-surface/40 p-5">
+      <p class="break-all font-mono text-xs text-accent">{vector}</p>
+      <dl class="mt-4 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+        {rows.map((r) => (
+          <div class="flex items-center justify-between gap-3 text-sm">
+            <dt class="text-muted">{r.name}</dt>
+            <dd class="flex items-center gap-2">
+              <span class="font-mono text-xs">{r.label}</span>
+              <span class="pips" aria-hidden="true">
+                {[1, 2, 3, 4].map((n) => (
+                  <i class={n <= r.rank ? 'on' : ''} />
+                ))}
+              </span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  )
+}

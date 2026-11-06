@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import { getProjects } from '@/lib/content';
+
+const items = await getProjects();
+---
+
+<BaseLayout
+  title="Projects"
+  description="Security tools, automation, and technical experiments by Arjun Giri."
+>
+  <div>
+    <PageHead title="Projects" lede="Security tools, automation, and technical experiments." />
+
+    <div class="mt-20 grid gap-x-16 md:grid-cols-2">
+      {
+        items.length > 0 ? (
+          items.map((entry) => <ProjectCard entry={entry} />)
+        ) : (
+          <p class="text-muted">Projects will appear here.</p>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

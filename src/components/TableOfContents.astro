@@ -1,0 +1,26 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+// Only h2/h3 keep the list readable.
+const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 2 && (
+    <nav class="text-sm" aria-label="Table of contents">
+      <p class="mb-2 font-mono text-xs uppercase tracking-wide text-muted">On this page</p>
+      <ul class="space-y-1.5">
+        {items.map((h) => (
+          <li class={h.depth === 3 ? 'pl-3' : ''}>
+            <a href={`#${h.slug}`} class="text-muted transition-colors hover:text-fg">
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

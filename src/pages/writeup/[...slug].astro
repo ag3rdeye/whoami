@@ -1,0 +1,79 @@
+---
+import { render } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import { getWriteups, readingTime } from '@/lib/content';
+
+export async function getStaticPaths() {
+  const items = await getWriteups();
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content, headings } = await render(entry);
+
+const meta = [
+  { label: 'Category', value: data.category },
+  { label: 'Published', value: data.publishDate.toLocaleDateString('en-US') },
+  data.updated && { label: 'Updated', value: data.updated.toLocaleDateString('en-US') },
+  { label: 'Read', value: `${readingTime(entry.body)} min` },
+  { label: 'Author', value: data.author },
+].filter(Boolean) as { label: string; value: string }[];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.publishDate.toISOString(),
+  dateModified: (data.updated ?? data.publishDate).toISOString(),
+  author: { '@type': 'Person', name: data.author },
+};
+---
+
+<ArticleLayout
+  title={data.title}
+  description={data.description}
+  publishDate={data.publishDate}
+  meta={meta}
+  headings={headings}
+  jsonLd={jsonLd}
+>
+  {data.cover && <img src={data.cover} alt="" />}
+  <Content />
+
+  <Fragment slot="footer">
+    {
+      data.tags.length > 0 && (
+        <ul class="mt-16 flex flex-wrap gap-4">
+          {data.tags.map((t) => (
+            <li class="label text-muted">
+              #{t}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      data.references.length > 0 && (
+        <section class="mt-8">
+          <h2 class="text-3xl">References</h2>
+          <ul class="mt-4 space-y-2 text-sm">
+            {data.references.map((r) => (
+              <li>
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-accent underline underline-offset-2"
+                >
+                  {r.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </Fragment>
+</ArticleLayout>

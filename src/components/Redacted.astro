@@ -1,0 +1,15 @@
+---
+interface Props {
+  lines?: number;
+}
+const { lines = 3 } = Astro.props;
+const widths = ['92%', '78%', '86%', '64%', '71%'];
+---
+
+<div class="space-y-2" aria-hidden="true">
+  {
+    Array.from({ length: lines }, (_, i) => (
+      <span class="redact" style={`width:${widths[i % widths.length]}`} />
+    ))
+  }
+</div>

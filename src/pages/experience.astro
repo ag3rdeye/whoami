@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
+import ExperienceTimeline from '@/components/ExperienceTimeline.astro';
+import { getExperience } from '@/lib/content';
+
+const items = await getExperience();
+---
+
+<BaseLayout title="Experience" description="Professional experience of Arjun Giri.">
+  <div>
+    <PageHead title="Experience" lede="Roles and the work behind them." />
+
+    <div class="mt-24">
+      {
+        items.length > 0 ? (
+          <ExperienceTimeline items={items} />
+        ) : (
+          <p class="text-muted">Experience entries will appear here.</p>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

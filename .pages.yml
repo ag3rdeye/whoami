@@ -1,0 +1,252 @@
+media:
+  input: public/images
+  output: /images
+  extensions: [png, jpg, jpeg, webp, svg, gif, avif]
+
+content:
+  # ----- Singletons -----
+  - name: site
+    label: Site Settings
+    type: file
+    path: src/data/site.json
+    fields:
+      - { name: title, label: Site title, type: string }
+      - { name: domain, label: Domain, type: string }
+      - { name: tagline, label: Tagline, type: string }
+      - { name: description, label: Meta description, type: text }
+      - { name: author, label: Author, type: string }
+      - { name: email, label: Public email, type: string }
+      - name: nav
+        label: Navigation
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string }
+          - { name: href, label: Href, type: string }
+      - name: socials
+        label: Social links
+        type: object
+        fields:
+          - { name: github, label: GitHub URL, type: string }
+          - { name: linkedin, label: LinkedIn URL, type: string }
+          - { name: twitter, label: Twitter/X URL, type: string }
+      - { name: copyright, label: Copyright name, type: string }
+
+  - name: home
+    label: Homepage
+    type: file
+    path: src/data/home.json
+    fields:
+      - { name: intro, label: Hero intro, type: text }
+      - { name: role, label: Current role, type: string }
+
+  - name: about
+    label: About Page
+    type: file
+    path: src/data/about.json
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: bio, label: Biography, type: text, description: Separate paragraphs with a blank line. }
+      - name: stats
+        label: Headline numbers
+        description: CVE and certification counts are calculated automatically.
+        type: object
+        list: true
+        fields:
+          - { name: value, label: Value, type: string }
+          - { name: label, label: Label, type: string }
+      - name: focusAreas
+        label: Areas of focus
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: body, label: Body, type: text }
+
+  - name: skills
+    label: Skills
+    type: file
+    path: src/data/skills.json
+    fields:
+      - name: items
+        label: Skills
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Name, type: string }
+          - name: group
+            label: Row
+            type: select
+            options:
+              values: [offensive, defensive]
+          - { name: icon, label: Brand logo slug, type: string, required: false, description: "simple-icons:<slug> shows the official logo in its brand color, e.g. simple-icons:burpsuite. Find slugs at simpleicons.org. Leave empty if uploading a logo." }
+          - { name: logo, label: Logo image, type: image, required: false, description: "Optional. Overrides the brand logo slug." }
+
+  # ----- Collections -----
+  - name: research
+    label: Research
+    type: collection
+    path: src/content/research
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, cve, severity, status, publishDate]
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: cve, label: CVE identifier, type: string, required: false }
+      - { name: classification, label: Classification, type: string, required: false }
+      - { name: product, label: Affected product, type: string, required: false }
+      - name: severity
+        label: Severity
+        type: select
+        required: false
+        options:
+          values: [informational, low, medium, high, critical]
+      - { name: cvss, label: CVSS score, type: number, required: false }
+      - { name: cvssVector, label: CVSS vector, type: string, required: false, description: "For example CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H. Shown decoded on the page." }
+      - { name: publishDate, label: Publish date, type: date, required: false }
+      - { name: discoveryDate, label: Discovery date, type: date, required: false }
+      - name: disclosureStatus
+        label: Disclosure status
+        type: select
+        options:
+          values: [reported, acknowledged, patched, public, embargoed, reserved]
+      - name: status
+        label: Publication status
+        type: select
+        options:
+          values: [draft, published, private]
+      - { name: summary, label: Summary, type: text }
+      - { name: featured, label: Featured, type: boolean }
+      - { name: featuredImage, label: Featured image, type: image, required: false }
+      - name: references
+        label: References
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string }
+          - { name: url, label: URL, type: string }
+      - name: advisories
+        label: Advisories
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string }
+          - { name: url, label: URL, type: string }
+      - { name: related, label: Related slugs, type: string, list: true }
+      - { name: body, label: Technical analysis, type: rich-text, options: { format: markdown } }
+
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/content/projects
+    filename: "{fields.name}.md"
+    view:
+      fields: [name, category, projectStatus, status]
+    fields:
+      - { name: name, label: Name, type: string }
+      - { name: description, label: Short description, type: text }
+      - name: category
+        label: Category
+        type: select
+        options:
+          values: [Security Tools, Automation, Open Source, Research, Personal Experiments]
+      - name: projectStatus
+        label: Project status
+        type: select
+        options:
+          values: [active, in-progress, completed, archived, planned]
+      - { name: tech, label: Technologies, type: string, list: true }
+      - { name: features, label: Key features, type: string, list: true }
+      - { name: repo, label: Repository URL, type: string, required: false }
+      - { name: demo, label: Demo URL, type: string, required: false }
+      - { name: startDate, label: Start date, type: date, required: false }
+      - { name: updated, label: Last updated, type: date, required: false }
+      - { name: featured, label: Featured, type: boolean }
+      - name: status
+        label: Publication status
+        type: select
+        options:
+          values: [draft, published]
+      - name: screenshots
+        label: Screenshots
+        type: object
+        list: true
+        fields:
+          - { name: src, label: Image, type: image }
+          - { name: alt, label: Alt text, type: string }
+      - { name: featuredImage, label: Featured image, type: image, required: false }
+      - { name: body, label: Overview, type: rich-text, options: { format: markdown } }
+
+  - name: writeup
+    label: Writeup
+    type: collection
+    path: src/content/writeup
+    filename: "{fields.title}.md"
+    view:
+      fields: [title, category, publishDate, draft, featured]
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: description, label: Description, type: text }
+      - { name: publishDate, label: Publish date, type: date }
+      - { name: updated, label: Last modified, type: date, required: false }
+      - { name: category, label: Category, type: string }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: author, label: Author, type: string }
+      - { name: cover, label: Cover image, type: image, required: false }
+      - { name: draft, label: Draft, type: boolean }
+      - { name: featured, label: Featured, type: boolean }
+      - { name: related, label: Related slugs, type: string, list: true }
+      - name: references
+        label: References
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string }
+          - { name: url, label: URL, type: string }
+      - { name: body, label: Article, type: rich-text, options: { format: markdown } }
+
+  - name: experience
+    label: Experience
+    type: collection
+    path: src/content/experience
+    filename: "{fields.org}-{fields.position}.md"
+    view:
+      fields: [position, org, order]
+    fields:
+      - { name: org, label: Organization, type: string }
+      - { name: position, label: Position, type: string }
+      - { name: start, label: Start date, type: string, required: false }
+      - { name: end, label: End date, type: string, required: false }
+      - { name: current, label: Current role, type: boolean }
+      - { name: location, label: Location, type: string, required: false }
+      - { name: description, label: Description, type: text, required: false }
+      - { name: responsibilities, label: Responsibilities, type: string, list: true }
+      - { name: achievements, label: Achievements, type: string, list: true }
+      - { name: tech, label: Technologies, type: string, list: true }
+      - { name: logo, label: Organization logo, type: image, required: false }
+      - { name: order, label: Order, type: number }
+
+  - name: certifications
+    label: Certifications and Recognition
+    type: collection
+    path: src/content/certifications
+    filename: "{fields.issuer}-{fields.name}.md"
+    view:
+      fields: [name, issuer, category, order]
+    fields:
+      - { name: name, label: Name, type: string }
+      - { name: short, label: Short code, type: string, required: false, description: "Shown on the tile when there is no logo, for example CNSP." }
+      - { name: issuer, label: Issuing organization, type: string, required: false }
+      - { name: issueDate, label: Issue date, type: string, required: false }
+      - { name: credentialId, label: Credential ID, type: string, required: false }
+      - { name: verifyUrl, label: Verification URL, type: string, required: false }
+      - { name: logo, label: Issuer logo, type: image, required: false }
+      - { name: image, label: Certificate image, type: image, required: false }
+      - { name: description, label: Description, type: text, required: false }
+      - name: category
+        label: Category
+        type: select
+        description: Certification appears under Certifications. Award and Acknowledgement appear under Recognition.
+        options:
+          values: [Certification, Award, Acknowledgement]
+      - { name: order, label: Order, type: number }

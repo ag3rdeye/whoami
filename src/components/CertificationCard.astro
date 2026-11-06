@@ -1,0 +1,57 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { Certification } from '@/lib/content';
+
+interface Props {
+  entry: Certification;
+}
+const { data } = Astro.props.entry;
+const mark = data.short ?? (data.issuer ?? data.name).slice(0, 2);
+---
+
+<li class="flex gap-4 border-r border-b border-border p-5 transition-colors hover:bg-surface">
+  {
+    data.logo ? (
+      <img
+        src={data.logo}
+        alt={data.issuer ?? ''}
+        width="44"
+        height="44"
+        loading="lazy"
+        class="size-11 shrink-0 object-cover"
+      />
+    ) : (
+      <span class="label grid size-11 shrink-0 place-items-center bg-surface text-accent">{mark}</span>
+    )
+  }
+
+  <div class="min-w-0 flex-1">
+    <p class="leading-snug">{data.name}</p>
+    {data.issuer && <p class="label mt-1 text-muted">{data.issuer}</p>}
+    {
+      data.issueDate && (
+        <p class="label mt-1 text-muted">
+          {data.category === 'Certification' ? 'Issued' : 'Received'} {data.issueDate}
+        </p>
+      )
+    }
+    {
+      data.category !== 'Certification' && data.description && (
+        <p class="mt-2 leading-snug text-muted">{data.description}</p>
+      )
+    }
+    {
+      data.verifyUrl && (
+        <a
+          href={data.verifyUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="label mt-3 inline-flex items-center gap-1.5 text-accent underline underline-offset-4"
+        >
+          Show credential
+          <Icon name="lucide:external-link" class="size-3" />
+        </a>
+      )
+    }
+  </div>
+</li>

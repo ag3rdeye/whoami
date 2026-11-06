@@ -1,0 +1,286 @@
+{
+  "items": [
+    {
+      "name": "Burp Suite",
+      "group": "offensive",
+      "icon": "simple-icons:burpsuite",
+      "logo": ""
+    },
+    {
+      "name": "Postman",
+      "group": "offensive",
+      "icon": "simple-icons:postman",
+      "logo": ""
+    },
+    {
+      "name": "HTTP Toolkit",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/httptoolkit.webp"
+    },
+    {
+      "name": "ffuf",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/ffuf.webp"
+    },
+    {
+      "name": "sqlmap",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/sqlmap.webp"
+    },
+    {
+      "name": "Nikto",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Nmap",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/nmap.webp"
+    },
+    {
+      "name": "Metasploit",
+      "group": "offensive",
+      "icon": "simple-icons:metasploit",
+      "logo": ""
+    },
+    {
+      "name": "Responder",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Nessus",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/nessus.webp"
+    },
+    {
+      "name": "Hydra",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Apktool",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "ADB",
+      "group": "offensive",
+      "icon": "simple-icons:android",
+      "logo": ""
+    },
+    {
+      "name": "Frida",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/frida.webp"
+    },
+    {
+      "name": "MobSF",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/mobsf.webp"
+    },
+    {
+      "name": "Drozer",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Objection",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Ghidra",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "IDA Pro",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/idapro.webp"
+    },
+    {
+      "name": "WinDbg",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "jadx",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "strace",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/strace.webp"
+    },
+    {
+      "name": "Sysinternals",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Amass",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/amass.webp"
+    },
+    {
+      "name": "Subfinder",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/subfinder.webp"
+    },
+    {
+      "name": "DNSRecon",
+      "group": "offensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Hashcat",
+      "group": "offensive",
+      "icon": "simple-icons:hashcat",
+      "logo": ""
+    },
+    {
+      "name": "John the Ripper",
+      "group": "offensive",
+      "icon": "",
+      "logo": "/images/skills/john.webp"
+    },
+    {
+      "name": "Elasticsearch",
+      "group": "defensive",
+      "icon": "logos:elasticsearch",
+      "logo": ""
+    },
+    {
+      "name": "Kibana",
+      "group": "defensive",
+      "icon": "logos:kibana",
+      "logo": ""
+    },
+    {
+      "name": "OpenSearch",
+      "group": "defensive",
+      "icon": "logos:opensearch-icon",
+      "logo": ""
+    },
+    {
+      "name": "TheHive",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/thehive.webp"
+    },
+    {
+      "name": "Cortex",
+      "group": "defensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "MISP",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/misp.webp"
+    },
+    {
+      "name": "OpenCTI",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/opencti.webp"
+    },
+    {
+      "name": "Microsoft Defender",
+      "group": "defensive",
+      "icon": "logos:microsoft-icon",
+      "logo": ""
+    },
+    {
+      "name": "Microsoft Sentinel",
+      "group": "defensive",
+      "icon": "logos:microsoft-icon",
+      "logo": ""
+    },
+    {
+      "name": "Wazuh",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/wazuh.webp"
+    },
+    {
+      "name": "CrowdSec",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/crowdsec.webp"
+    },
+    {
+      "name": "Fail2Ban",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/fail2ban.webp"
+    },
+    {
+      "name": "Suricata",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/suricata.webp"
+    },
+    {
+      "name": "Wireshark",
+      "group": "defensive",
+      "icon": "simple-icons:wireshark",
+      "logo": ""
+    },
+    {
+      "name": "tcpdump",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/tcpdump.webp"
+    },
+    {
+      "name": "YARA",
+      "group": "defensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "Sigma",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/sigma.webp"
+    },
+    {
+      "name": "ElastAlert",
+      "group": "defensive",
+      "icon": "",
+      "logo": ""
+    },
+    {
+      "name": "MITRE ATT&CK",
+      "group": "defensive",
+      "icon": "",
+      "logo": "/images/skills/attack.webp"
+    }
+  ]
+}

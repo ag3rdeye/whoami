@@ -1,0 +1,84 @@
+---
+import { render } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import CvssVector from '@/components/CvssVector.astro';
+import Redacted from '@/components/Redacted.astro';
+import { getResearch } from '@/lib/content';
+
+export async function getStaticPaths() {
+  const items = await getResearch();
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content, headings } = await render(entry);
+
+const meta = [
+  data.cve && { label: 'CVE', value: data.cve },
+  data.severity && { label: 'Severity', value: data.severity },
+  data.cvss != null && { label: 'CVSS', value: String(data.cvss) },
+  data.product && { label: 'Product', value: data.product },
+  { label: 'Status', value: data.disclosureStatus },
+  data.classification && { label: 'Class', value: data.classification },
+  data.publishDate && { label: 'Published', value: data.publishDate.toLocaleDateString('en-US') },
+].filter(Boolean) as { label: string; value: string }[];
+
+const withheld = data.disclosureStatus === 'reserved' || data.disclosureStatus === 'embargoed';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: data.title,
+  datePublished: data.publishDate?.toISOString(),
+  author: { '@type': 'Person', name: 'Arjun Giri' },
+};
+---
+
+<ArticleLayout
+  title={data.title}
+  description={data.summary}
+  publishDate={data.publishDate}
+  meta={meta}
+  headings={headings}
+  jsonLd={jsonLd}
+  glyph={data.cve}
+>
+  {data.featuredImage && <img src={data.featuredImage} alt="" loading="lazy" />}
+  {data.cvssVector && <CvssVector vector={data.cvssVector} />}
+  {
+    withheld && (
+      <div class="not-prose">
+        <p class="label mb-4 text-muted">
+          Details withheld until the CVE record is public.
+        </p>
+        <Redacted lines={5} />
+      </div>
+    )
+  }
+  <Content />
+
+  <Fragment slot="footer">
+    {
+      (data.references.length > 0 || data.advisories.length > 0) && (
+        <section class="mt-16">
+          <h2 class="text-3xl">References</h2>
+          <ul class="mt-4 space-y-2 text-sm">
+            {[...data.advisories, ...data.references].map((r) => (
+              <li>
+                <a
+                  href={r.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-accent underline underline-offset-2"
+                >
+                  {r.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </Fragment>
+</ArticleLayout>

@@ -1,0 +1,32 @@
+---
+import type { Project } from '@/lib/content';
+
+interface Props {
+  entry: Project;
+}
+const { entry } = Astro.props;
+const { data } = entry;
+---
+
+<a
+  href={`/projects/${entry.id}`}
+  class="group rise flex h-full flex-col border-t border-fg/25 py-6"
+>
+  <div class="label flex items-center justify-between uppercase text-muted">
+    <span class="text-accent">{data.category}</span>
+    <span>{data.projectStatus}</span>
+  </div>
+  <h3 class="mt-2 text-[clamp(3rem,6vw,5.5rem)] leading-none transition-colors group-hover:text-accent">{data.name}</h3>
+  <p class="mt-3 flex-1 leading-snug text-muted">{data.description}</p>
+  {
+    data.tech.length > 0 && (
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {data.tech.slice(0, 4).map((t) => (
+          <li class="label text-muted">
+            {t}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</a>

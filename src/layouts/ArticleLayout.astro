@@ -1,0 +1,65 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  publishDate?: Date;
+  meta?: { label: string; value: string }[];
+  headings?: MarkdownHeading[];
+  jsonLd?: Record<string, unknown>;
+  glyph?: string;
+}
+
+const { title, description, image, publishDate, meta = [], headings = [], jsonLd, glyph } = Astro.props;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  type="article"
+  publishDate={publishDate}
+  jsonLd={jsonLd}
+>
+  <article>
+    <header class="mb-14 pt-[9vh]">
+      {glyph && <p data-glyph class="poster mb-10" style={`--len:${glyph.length}`}>{glyph}</p>}
+      <h1 class="max-w-5xl text-4xl leading-none sm:text-6xl">{title}</h1>
+      {description && <p class="mt-5 max-w-3xl text-2xl italic leading-snug text-muted">{description}</p>}
+      {
+        meta.length > 0 && (
+          <dl class="label mt-6 flex flex-wrap gap-x-6 gap-y-2 text-muted">
+            {meta.map((m) => (
+              <div>
+                <dt class="inline text-muted/70">{m.label}: </dt>
+                <dd class="inline text-fg">{m.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </header>
+
+    <div class="gap-10 lg:grid lg:grid-cols-[1fr_220px]">
+      <div class="prose">
+        <slot />
+      </div>
+      {
+        headings.length > 0 && (
+          <aside class="order-first mb-8 lg:order-last lg:mb-0">
+            <div class="lg:sticky lg:top-24">
+              <TableOfContents headings={headings} />
+            </div>
+          </aside>
+        )
+      }
+    </div>
+
+    <slot name="footer" />
+  </article>
+</BaseLayout>
+

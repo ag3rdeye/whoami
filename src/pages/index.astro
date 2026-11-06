@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import site from '@/data/site.json';
+import home from '@/data/home.json';
+import { portraitArt } from '@/lib/portrait';
+
+const art = await portraitArt();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.author,
+  description: site.description,
+  url: `https://${site.domain}`,
+  jobTitle: home.role,
+  sameAs: [site.socials.github, site.socials.linkedin].filter(Boolean),
+};
+---
+
+<BaseLayout jsonLd={jsonLd}>
+  <section class="flex flex-col items-center text-center">
+    <pre
+      data-portrait
+      class="portrait"
+      role="img"
+      aria-label="ASCII portrait of Arjun Giri"
+      style={`--cols:${art.cols};--rows:${art.rows}`}>{art.text}</pre>
+
+    <div class="relative z-10 -mt-[7vh] w-full">
+      <h1 class="name font-heading uppercase leading-none">{site.author}</h1>
+      <p class="label mt-3 uppercase text-accent">{home.role}</p>
+      <p class="mx-auto mt-2 max-w-3xl text-lg leading-snug text-fg/85 sm:text-xl">{home.intro}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* A Plex Mono cell is 0.6em wide */
+  .portrait {
+    width: calc(var(--cols) * 0.6em);
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    text-align: left;
+    font-size: min(calc(70vh / var(--rows)), calc(100vw / (var(--cols) * 0.6)));
+    line-height: 1;
+    white-space: pre;
+  }
+  .name {
+    font-size: min(15vw, 15vh);
+  }
+</style>

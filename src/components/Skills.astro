@@ -1,0 +1,135 @@
+---
+import { Icon } from 'astro-icon/components';
+import * as simpleIcons from 'simple-icons';
+import logoSet from '@iconify-json/logos/icons.json';
+import skills from '@/data/skills.json';
+
+type Brand = { slug: string; hex: string; path: string };
+const brands = new Map<string, Brand>(
+  Object.values(simpleIcons as Record<string, Brand>)
+    .filter((i) => i && typeof i === 'object' && 'slug' in i)
+    .map((i) => [i.slug, i])
+);
+
+// Near-black brand colors would vanish on the dark theme; lift them to the text color.
+const visible = (hex: string) => {
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 60 ? 'var(--fg)' : `#${hex}`;
+};
+
+const prepared = skills.items.map((item) => {
+  const slug = item.icon?.startsWith('simple-icons:') ? item.icon.split(':')[1] : '';
+  const brand = slug ? brands.get(slug) : undefined;
+  // An unknown slug falls back to the letter tile rather than failing the build.
+  const [set, name] = item.icon?.split(':') ?? [];
+  const icon = set === 'logos' && name in logoSet.icons ? item.icon : '';
+  return { ...item, icon, brand, color: brand ? visible(brand.hex) : '' };
+});
+
+// Each row repeats until one half is wider than the viewport, then renders twice so the
+// loop wraps without a visible jump.
+const track = (group: string) => {
+  const items = prepared.filter((i) => i.group === group);
+  const reps = items.length ? Math.ceil(16 / items.length) : 0;
+  const half = Array.from({ length: reps }, () => items).flat();
+  return { count: items.length, cells: [...half, ...half] };
+};
+
+const rows = [
+  { label: 'Offensive', slow: false, ...track('offensive') },
+  { label: 'Defensive', slow: true, ...track('defensive') },
+].filter((r) => r.count > 0);
+---
+
+{
+  rows.map((row) => (
+    <div class="mt-10">
+      <p class="label uppercase text-muted">{row.label}</p>
+      <div class="marquee full-bleed mt-3 overflow-hidden py-2">
+        <ul class:list={['marquee-track flex w-max items-start gap-6', { slow: row.slow }]}>
+          {row.cells.map((item, i) => (
+            <li
+              class="flex w-24 shrink-0 flex-col items-center gap-2 text-center"
+              aria-hidden={i >= row.count ? 'true' : undefined}
+            >
+              {item.logo ? (
+                <img
+                  src={item.logo}
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  class="size-12 object-cover"
+                />
+              ) : (
+                <span
+                  class="tile grid size-12 place-items-center"
+                  style={item.color ? `--tile:${item.color}` : undefined}
+                >
+                  {item.brand ? (
+                    <svg viewBox="0 0 24 24" class="size-7" aria-hidden="true">
+                      <path d={item.brand.path} fill={item.color} />
+                    </svg>
+                  ) : item.icon ? (
+                    <Icon name={item.icon} class="size-7" />
+                  ) : (
+                    <span class="font-mono text-sm font-medium text-fg/80">
+                      {item.name.slice(0, 2)}
+                    </span>
+                  )}
+                </span>
+              )}
+              <span class="label leading-tight text-fg/80">{item.name}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  ))
+}
+
+<style>
+  .tile {
+    background: color-mix(in srgb, var(--tile, var(--muted)) 14%, transparent);
+  }
+  /* Items fade in on entry and fade out on exit */
+  .marquee {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.35) 6%,
+      black 18%,
+      black 82%,
+      rgb(0 0 0 / 0.35) 94%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      rgb(0 0 0 / 0.35) 6%,
+      black 18%,
+      black 82%,
+      rgb(0 0 0 / 0.35) 94%,
+      transparent 100%
+    );
+  }
+  /* Left to right: the track slides from -50% to 0, and the duplicate half hides the reset */
+  .marquee-track {
+    animation: skills-ltr 70s linear infinite;
+    will-change: transform;
+  }
+  .marquee-track.slow {
+    animation-duration: 55s;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes skills-ltr {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+</style>

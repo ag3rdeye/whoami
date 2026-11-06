@@ -1,0 +1,27 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import { getWriteups } from '@/lib/content';
+
+const items = await getWriteups();
+---
+
+<BaseLayout
+  title="Writeup"
+  description="Technical articles, tutorials, and research write-ups by Arjun Giri."
+>
+  <div>
+    <PageHead title="Writeup" lede="Technical articles, tutorials, and notes on security and systems." />
+
+    <div class="mt-20">
+      {
+        items.length > 0 ? (
+          items.map((entry) => <ArticleCard entry={entry} />)
+        ) : (
+          <p class="text-muted">Articles will appear here.</p>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>
