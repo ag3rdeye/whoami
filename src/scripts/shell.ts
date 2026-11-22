@@ -89,7 +89,6 @@ const commands: Record<string, (args: string[]) => void | Promise<void>> = {
     print('cat <file>       print a file');
     print('open <file>      go to the page behind a file');
     print('whoami           who is here');
-    print('theme [mode]     switch light or dark');
     print('motion on|off    full animation or calm mode');
     print('history, clear, exit');
     print('Tab completes, arrow keys walk history.', 'dim');
@@ -121,15 +120,6 @@ const commands: Record<string, (args: string[]) => void | Promise<void>> = {
     location.assign(url);
   },
   whoami: () => print('guest'),
-  theme(args) {
-    const root = document.documentElement;
-    const mode = args[0] ?? (root.classList.contains('light') ? 'dark' : 'light');
-    if (mode !== 'light' && mode !== 'dark') return print('usage: theme [light|dark]', 'err');
-    root.classList.toggle('light', mode === 'light');
-    store.set('theme', mode);
-    dispatchEvent(new Event('field:theme'));
-    print(`theme: ${mode}`);
-  },
   motion(args) {
     if (args[0] !== 'on' && args[0] !== 'off') return print('usage: motion on|off', 'err');
     store.set('motion', args[0]);

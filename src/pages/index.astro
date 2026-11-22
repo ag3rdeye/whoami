@@ -4,7 +4,10 @@ import site from '@/data/site.json';
 import home from '@/data/home.json';
 import { portraitArt } from '@/lib/portrait';
 
-const art = await portraitArt();
+const arts = [
+  { size: 'sm', art: await portraitArt('sm'), show: 'md:hidden' },
+  { size: 'lg', art: await portraitArt('lg'), show: 'hidden md:block' },
+];
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -19,12 +22,17 @@ const jsonLd = {
 
 <BaseLayout jsonLd={jsonLd}>
   <section class="flex flex-col items-center text-center">
-    <pre
-      data-portrait
-      class="portrait"
-      role="img"
-      aria-label="ASCII portrait of Arjun Giri"
-      style={`--cols:${art.cols};--rows:${art.rows}`}>{art.text}</pre>
+    {
+      arts.map(({ size, art, show }) => (
+        <pre
+          data-portrait
+          data-colors={`/portrait-${size}.png`}
+          class:list={['portrait', show]}
+          role="img"
+          aria-label="ASCII portrait of Arjun Giri"
+          style={`--cols:${art.cols};--rows:${art.rows}`}>{art.text}</pre>
+      ))
+    }
 
     <div class="relative z-10 -mt-[7vh] w-full">
       <h1 class="name font-heading uppercase leading-none">{site.author}</h1>

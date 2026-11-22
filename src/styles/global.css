@@ -8,10 +8,7 @@
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
 
-/* Light theme opt-in via .light on <html>; dark is the default. */
-@custom-variant light (&:where(.light, .light *));
-
-/* Dark (default) */
+/* Dark only */
 :root {
   --bg: #0a0a0b;
   --surface: #141415;
@@ -19,16 +16,6 @@
   --muted: #a09b91;
   --accent: #ff5a1f;
   --border: #2c2a28;
-}
-
-/* Light overrides */
-.light {
-  --bg: #efeadf;
-  --surface: #e6e0d3;
-  --fg: #141312;
-  --muted: #5f5b53;
-  --accent: #c23300;
-  --border: #cfc8b8;
 }
 
 @theme inline {
@@ -47,9 +34,6 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
-}
-.light {
-  color-scheme: light;
 }
 
 body {
@@ -151,8 +135,6 @@ h1, h2, h3, h4, h5, h6 {
 .sev-critical { color: #e5484d; }
 .sev-high { color: #e8894a; }
 .sev-medium { color: #d9b34a; }
-.light .sev-high { color: #a4460f; }
-.light .sev-medium { color: #806000; }
 .sev-low,
 .sev-informational { color: var(--muted); }
 .bg-sev-critical { background: #e5484d; }

@@ -7,7 +7,7 @@ export {};
 const CHARS = ' .,:;-=+*xoX#%@|ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\{}<>[]()$&';
 const ATLAS_GRID = 8;
 const CELL = 64;
-const COUNT = innerWidth < 768 ? 7000 : 20000;
+const COUNT = innerWidth < 768 ? 8000 : 20000;
 const STRIDE = 21; // floats per particle
 const MORPH_SECONDS = 1.5;
 
@@ -30,7 +30,8 @@ void main() {
   vec2 d = pos - uRes * 0.5;
   float a = fly * (aSeed - 0.5) * 2.6;
   pos = uRes * 0.5 + mat2(cos(a), -sin(a), sin(a), cos(a)) * d;
-  pos += vec2(sin(aSeed * 91.0 + uTime * 2.0), cos(aSeed * 57.0 + uTime * 2.6)) * fly * 70.0;
+  // Wobble scales with the screen so phones do not turn into noise mid-flight.
+  pos += vec2(sin(aSeed * 91.0 + uTime * 2.0), cos(aSeed * 57.0 + uTime * 2.6)) * fly * min(70.0, uRes.x * 0.08);
 
   pos.x += (hash(aSeed * 7.0) - 0.5) * uDisperse * 300.0;
   pos.y -= hash(aSeed * 3.0) * uDisperse * 220.0;
@@ -54,7 +55,7 @@ void main() {
 
   vec2 clip = pos / uRes * 2.0 - 1.0;
   gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
-  gl_PointSize = mix(aSize.x, aSize.y, e) * (1.0 + fly * 0.6) * uDpr;
+  gl_PointSize = mix(aSize.x, aSize.y, e) * (1.0 + fly * min(0.6, uRes.x / 1500.0)) * uDpr;
 }`;
 
 const FRAG = `#version 300 es
@@ -128,18 +129,20 @@ function buildAtlas(ctx: WebGL2RenderingContext) {
   ctx.texParameteri(ctx.TEXTURE_2D, ctx.TEXTURE_MAG_FILTER, ctx.LINEAR);
 }
 
-let colors: { data: Uint8ClampedArray; width: number } | null = null;
+type Colors = { data: Uint8ClampedArray; width: number };
+const colorMaps = new Map<string, Colors>();
+const COLOR_URLS = ['/portrait-sm.png', '/portrait-lg.png'];
 
-async function loadColors() {
+async function loadColors(url: string) {
   const image = new Image();
-  image.src = '/portrait.png';
+  image.src = url;
   await image.decode();
   const paper = document.createElement('canvas');
   paper.width = image.naturalWidth;
   paper.height = image.naturalHeight;
   const c = paper.getContext('2d', { willReadFrequently: true })!;
   c.drawImage(image, 0, 0);
-  colors = { data: c.getImageData(0, 0, paper.width, paper.height).data, width: paper.width };
+  colorMaps.set(url, { data: c.getImageData(0, 0, paper.width, paper.height).data, width: paper.width });
 }
 
 // Portrait: every character in the <pre> lands on its exact cell, in the photo's colour.
@@ -150,6 +153,7 @@ function portraitTargets(pre: HTMLElement): Target[] {
   const cw = parseFloat(getComputedStyle(pre).fontSize) * 0.6;
   const ch = box.height / lines.length;
   const step = cw < 2.4 ? 2 : 1;
+  const colors = colorMaps.get(pre.dataset.colors ?? '');
   const targets: Target[] = [];
   for (let r = 0; r < lines.length; r += step) {
     for (let c = 0; c < lines[r].length; c += step) {
@@ -223,7 +227,10 @@ function wordTargets(el: HTMLElement): Target[] {
 }
 
 function currentTargets(): Target[] {
-  const pre = document.querySelector<HTMLElement>('[data-portrait]');
+  // Phones and desktops get different portraits; use whichever one is displayed.
+  const pre = [...document.querySelectorAll<HTMLElement>('[data-portrait]')].find(
+    (el) => el.getClientRects().length > 0,
+  );
   if (pre) return portraitTargets(pre);
   const word = document.querySelector<HTMLElement>('[data-glyph]');
   return word ? wordTargets(word) : [];
@@ -291,7 +298,7 @@ function start(ctx: WebGL2RenderingContext, view: HTMLCanvasElement) {
     return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
   };
 
-  const paintTheme = () => {
+  const paintInk = () => {
     const style = getComputedStyle(root);
     ctx.uniform3fv(uniforms.ink, rgb(style.getPropertyValue('--fg')));
     ctx.uniform3fv(uniforms.hot, rgb(style.getPropertyValue('--accent')));
@@ -395,14 +402,12 @@ function start(ctx: WebGL2RenderingContext, view: HTMLCanvasElement) {
 
   document.addEventListener('astro:after-swap', () => {
     root.classList.add('has-field');
-    paintTheme();
     morph();
   });
-  addEventListener('field:theme', paintTheme);
   addEventListener('field:motion', () => morph());
 
   resize();
-  paintTheme();
+  paintInk();
   root.classList.add('has-field');
   morph();
   requestAnimationFrame(frame);
@@ -412,7 +417,7 @@ if (gl && canvas) {
   const ready = [
     document.fonts.load('500 50px "IBM Plex Mono"'),
     document.fonts.load('200px Anton'),
-    loadColors(),
+    ...COLOR_URLS.map(loadColors),
   ];
   Promise.all(ready)
     .catch(() => {})

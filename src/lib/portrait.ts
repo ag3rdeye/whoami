@@ -1,7 +1,9 @@
 import sharp from 'sharp';
 
 const TONES = ' .,:;-=+*xoX#%@';
-const ROWS = 130;
+// Rows per size: phones get a coarser grid so every character keeps its own cell.
+export const SIZES = { lg: 130, sm: 84 } as const;
+export type Size = keyof typeof SIZES;
 const BODY = 0.54; // how far down the photo to go: head to torso
 const SOURCE = 'src/assets/hero.jpg';
 const MASK = 'src/assets/hero-mask.png'; // person cut-out, see scripts/portrait-mask.swift
@@ -12,7 +14,7 @@ const smooth = (a: number, b: number, v: number) => {
 };
 
 // Crops to the person, then samples colour, local-contrast tone, and the mask per character.
-const cells = async () => {
+const cells = async (ROWS: number) => {
   const { width = 0, height = 0 } = await sharp(SOURCE).metadata();
   const full = await sharp(MASK).resize(width, height, { fit: 'fill' }).greyscale().raw().toBuffer();
 
@@ -63,8 +65,9 @@ const cells = async () => {
 
 // Real text at build time: tone sets density, and along strong edges the character follows
 // the direction of the line. Anything outside the person stays empty.
-export async function portraitArt() {
-  const { cols, tone, alpha } = await cells();
+export async function portraitArt(size: Size = 'lg') {
+  const ROWS = SIZES[size];
+  const { cols, tone, alpha } = await cells(ROWS);
   const at = (x: number, y: number) =>
     tone[Math.min(ROWS - 1, Math.max(0, y)) * cols + Math.min(cols - 1, Math.max(0, x))] / 255;
 
@@ -92,8 +95,9 @@ export async function portraitArt() {
 
 // One pixel per character: the photo's colour, with shadows lifted so a dark suit still
 // reads against a black page, and the person's outline in the alpha channel.
-export async function portraitColors() {
-  const { cols, color, alpha } = await cells();
+export async function portraitColors(size: Size = 'lg') {
+  const ROWS = SIZES[size];
+  const { cols, color, alpha } = await cells(ROWS);
   const out = Buffer.alloc(cols * ROWS * 4);
   const lift = (v: number) => Math.round((v / 255) ** 0.8 * 255);
   for (let y = 0; y < ROWS; y++) {

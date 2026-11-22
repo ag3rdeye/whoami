@@ -1,6 +1,5 @@
 ---
 import site from '@/data/site.json';
-import ThemeToggle from './ThemeToggle.astro';
 import { Icon } from 'astro-icon/components';
 
 const path = Astro.url.pathname;
@@ -42,7 +41,6 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
         <Icon name="lucide:terminal" class="size-4" />
         <kbd class="hidden font-mono text-xs lg:inline">`</kbd>
       </button>
-      <ThemeToggle />
       <button
         id="menu-toggle"
         type="button"

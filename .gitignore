@@ -21,6 +21,7 @@ node_modules/
 *[Rr]esume*.pdf
 SETUP-GUIDE.md
 DEV-NOTES.md
+DEPLOYMENT-NOTES.md
 
 # os / editor
 .DS_Store
