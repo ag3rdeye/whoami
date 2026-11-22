@@ -7,7 +7,9 @@ const md = (dir: string) => glob({ pattern: '**/*.{md,mdx}', base: `./src/conten
 // The CMS can save an empty optional field as '' or null; treat both as unset.
 const blank = (v: unknown) => (v === '' || v === null ? undefined : v);
 const optText = z.preprocess(blank, z.string().optional());
-const optUrl = z.preprocess(blank, z.url().optional());
+// Links must be web addresses; javascript: and data: are rejected at build time.
+const web = () => z.url({ protocol: /^https?$/ });
+const optUrl = z.preprocess(blank, web().optional());
 const optDate = z.preprocess(blank, z.coerce.date().optional());
 // CMS uploads land in public/images and are stored as /images/... paths.
 const optImage = optText;
@@ -15,7 +17,7 @@ const optImage = optText;
 const choice = <T extends z.ZodType>(schema: T) => z.preprocess(blank, schema);
 const flag = choice(z.boolean().default(false));
 const order = choice(z.number().default(0));
-const link = z.object({ label: z.string(), url: z.url() });
+const link = z.object({ label: z.string(), url: web() });
 const list = <T extends z.ZodType>(item: T) =>
   z.preprocess((v) => v ?? [], z.array(item));
 

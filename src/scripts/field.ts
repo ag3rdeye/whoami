@@ -152,7 +152,9 @@ function portraitTargets(pre: HTMLElement): Target[] {
   const top = box.top + scrollY;
   const cw = parseFloat(getComputedStyle(pre).fontSize) * 0.6;
   const ch = box.height / lines.length;
-  const step = cw < 2.4 ? 2 : 1;
+  // Thin out when cells are tiny or there are more characters than particles.
+  const dense = ((pre.textContent ?? '').match(/\S/g)?.length ?? 0) > COUNT;
+  const step = cw < 2.4 || dense ? 2 : 1;
   const colors = colorMaps.get(pre.dataset.colors ?? '');
   const targets: Target[] = [];
   for (let r = 0; r < lines.length; r += step) {

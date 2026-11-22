@@ -4,6 +4,10 @@ import PageHead from '@/components/PageHead.astro';
 import { Icon } from 'astro-icon/components';
 import site from '@/data/site.json';
 
+const web = (url?: string) => (url?.startsWith('https://') ? url : '');
+const linkedin = web(site.socials.linkedin);
+const github = web(site.socials.github);
+
 const channels = [
   site.email && {
     icon: 'lucide:mail',
@@ -11,17 +15,17 @@ const channels = [
     value: site.email,
     href: `mailto:${site.email}`,
   },
-  site.socials.linkedin && {
+  linkedin && {
     icon: 'lucide:linkedin',
     label: 'LinkedIn',
-    value: site.socials.linkedin.replace('https://', ''),
-    href: site.socials.linkedin,
+    value: linkedin.replace('https://', ''),
+    href: linkedin,
   },
-  site.socials.github && {
+  github && {
     icon: 'lucide:github',
     label: 'GitHub',
-    value: site.socials.github.replace('https://', ''),
-    href: site.socials.github,
+    value: github.replace('https://', ''),
+    href: github,
   },
 ].filter(Boolean) as { icon: string; label: string; value: string; href: string }[];
 ---

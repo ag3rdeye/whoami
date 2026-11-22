@@ -16,7 +16,7 @@ const jsonLd = {
   description: site.description,
   url: `https://${site.domain}`,
   jobTitle: home.role,
-  sameAs: [site.socials.github, site.socials.linkedin].filter(Boolean),
+  sameAs: [site.socials.github, site.socials.linkedin].filter((url) => url?.startsWith('https://')),
 };
 ---
 
